@@ -3,6 +3,7 @@ const Notice = require('../models/Notice');
 const Course = require('../models/Course');
 const Gallery = require('../models/Gallery');
 const Contact = require('../models/Contact');
+const Settings = require('../models/Settings');
 const Admission = require('../models/Admission');
 
 // EVENTS
@@ -92,5 +93,52 @@ exports.getAdmissions = async (req, res) => {
   try {
     const admissions = await Admission.find().sort({ createdAt: -1 });
     res.json(admissions);
+  } catch (err) { res.status(500).json({ message: err.message }); }
+};
+
+// SETTINGS
+exports.getSettings = async (req, res) => {
+  try {
+    let settings = await Settings.findOne();
+    if (!settings) {
+      settings = await Settings.create({}); // Create default settings if not exists
+    }
+    res.json(settings);
+  } catch (err) { res.status(500).json({ message: err.message }); }
+};
+
+exports.updateSettings = async (req, res) => {
+  try {
+    let settings = await Settings.findOne();
+    if (!settings) {
+      settings = await Settings.create(req.body);
+    } else {
+      settings = await Settings.findOneAndUpdate({}, req.body, { new: true });
+    }
+    res.json(settings);
+  } catch (err) { res.status(400).json({ message: err.message }); }
+};
+
+// CONTACT ADMIN VIEW
+exports.getContacts = async (req, res) => {
+  try {
+    const contacts = await Contact.find().sort({ createdAt: -1 });
+    res.json(contacts);
+  } catch (err) { res.status(500).json({ message: err.message }); }
+};
+
+exports.deleteContact = async (req, res) => {
+  try {
+    const contact = await Contact.findByIdAndDelete(req.params.id);
+    if (!contact) return res.status(404).json({ message: 'Contact not found' });
+    res.json({ message: 'Contact message deleted successfully' });
+  } catch (err) { res.status(500).json({ message: err.message }); }
+};
+
+exports.deleteAdmission = async (req, res) => {
+  try {
+    const admission = await Admission.findByIdAndDelete(req.params.id);
+    if (!admission) return res.status(404).json({ message: 'Admission not found' });
+    res.json({ message: 'Admission application deleted successfully' });
   } catch (err) { res.status(500).json({ message: err.message }); }
 };

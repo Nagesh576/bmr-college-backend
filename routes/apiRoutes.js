@@ -22,6 +22,7 @@ router.get('/events', apiController.getEvents);
 router.get('/notices', apiController.getNotices);
 router.get('/courses', apiController.getCourses);
 router.get('/gallery', apiController.getGallery);
+router.get('/settings', apiController.getSettings);
 
 // Force Reset Admin
 router.get('/reset-admin', async (req, res) => {
@@ -49,6 +50,10 @@ router.post('/events', protect, admin, apiController.createEvent);
 router.post('/notices', protect, admin, apiController.createNotice);
 router.post('/courses', protect, admin, apiController.createCourse);
 router.get('/admissions', protect, admin, apiController.getAdmissions);
+router.delete('/admissions/:id', protect, admin, apiController.deleteAdmission);
+router.get('/contacts', protect, admin, apiController.getContacts);
+router.delete('/contacts/:id', protect, admin, apiController.deleteContact);
+router.put('/settings', protect, admin, apiController.updateSettings);
 
 // Gallery Upload Route
 router.post('/gallery', upload.single('image'), apiController.uploadGalleryImage);
