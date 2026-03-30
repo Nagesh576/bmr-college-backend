@@ -90,7 +90,7 @@ exports.submitAdmission = async (req, res) => {
 
 exports.getAdmissions = async (req, res) => {
   try {
-    const admissions = await Admission.find().populate('courseOfInterest', 'name');
+    const admissions = await Admission.find().sort({ createdAt: -1 });
     res.json(admissions);
   } catch (err) { res.status(500).json({ message: err.message }); }
 };
